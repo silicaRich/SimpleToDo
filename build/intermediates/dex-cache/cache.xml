@@ -2,6 +2,13 @@
 <items version="2" >
 
     <item
+        jar="C:\Program Files\Android\Android Studio\gradle\m2repository\commons-io\commons-io\2.4\commons-io-2.4.jar"
+        jumboMode="true"
+        revision="24.0.0"
+        sha1="b1b6ea3b7e4aa4f492509a4952029cd8e48019ad">
+        <dex dex="C:\Users\floko_000\AndroidStudioProjects\SimpleToDo\app\build\intermediates\transforms\dex\debug\folders\1000\10\commons-io-2.4_b2955a73e8fdec69863902c786dced8321b28c5c\classes.dex" />
+    </item>
+    <item
         jar="C:\Users\floko_000\AndroidStudioProjects\SimpleToDo\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.4.0\jars\libs\internal_impl-23.4.0.jar"
         jumboMode="true"
         revision="24.0.0"
@@ -12,7 +19,7 @@
         jar="C:\Users\floko_000\AndroidStudioProjects\SimpleToDo\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
         jumboMode="true"
         revision="24.0.0"
-        sha1="a4eb84e995a14d88c9023b6e5323e15d7588664b">
+        sha1="44a3fdec4f927227911887d215d3bf7b12e7a086">
         <dex dex="C:\Users\floko_000\AndroidStudioProjects\SimpleToDo\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_8e1c8ae2ae4ad16aabef9062b852cf4500b49e04\classes.dex" />
     </item>
     <item
@@ -40,7 +47,7 @@
         jar="C:\Users\floko_000\AndroidStudioProjects\SimpleToDo\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
         jumboMode="true"
         revision="24.0.0"
-        sha1="2d76320feef90c0ccc323e887f485b4ef13795b8">
+        sha1="ff86d3971199f4c1ce152de8a34b0d9a27574144">
         <dex dex="C:\Users\floko_000\AndroidStudioProjects\SimpleToDo\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_967e780ce848e1644434c3bcfc0acd619bcbd7aa\classes.dex" />
     </item>
     <item
