@@ -51,7 +51,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onItemLongClick(AdapterView<?> adapter, View item, int pos, long id){
-                items.remove(pos);
+                ToDoDatabaseHelper toDoDatabaseHelper = ToDoDatabaseHelper.getInstance(MainActivity.this);
+                String itemText = itemsAdapter.getItem(pos).toString();
+                itemsAdapter.remove(itemText);
+                toDoDatabaseHelper.deleteItem(itemText);
+                readItems();
                 itemsAdapter.notifyDataSetChanged();
                 return true;
             }
@@ -83,56 +87,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onAddItem(View v){
+        ToDoDatabaseHelper toDoDatabaseHelper = ToDoDatabaseHelper.getInstance(MainActivity.this);
         EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
         String itemText = etNewItem.getText().toString();
         itemsAdapter.add(itemText);
         etNewItem.setText("");
-        writeItems();
+        Item newItem = new Item ();
+        User admin = new User();
+        admin.userName = "Admin";
+        newItem.text = itemText;
+        newItem.user = admin;
+
+        toDoDatabaseHelper.addItem(newItem);
 
     }
 
     private void readItems(){
-        File filesDir = getFilesDir();
-        File todoFile = new File(filesDir, "todo.txt");
-        try {
-            items = new ArrayList<String>(FileUtils.readLines(todoFile));
-        }
-        catch (IOException e){
-            items = new ArrayList<String>();
-        }
-
-
-        // Create sample data
-        User sampleUser = new User();
-        sampleUser.userName = "Steph";
-
-        Item sampleItem = new Item();
-        sampleItem.user = sampleUser;
-        sampleItem.text = "Won won!";
-
-
-        ToDoDatabaseHelper toDoDatabaseHelper = ToDoDatabaseHelper.getInstance(MainActivity.this);     // Add sample post to the database
-        toDoDatabaseHelper.addItem(sampleItem);
-
+        ToDoDatabaseHelper toDoDatabaseHelper = ToDoDatabaseHelper.getInstance(MainActivity.this);
         // Get all Items from database
-        List<Item> items = toDoDatabaseHelper.getAllItems();
-        for (Item item : items) {
-            Log.d(TAG, item.text);
-        }
-
-    }
-
-    private void writeItems(){
-        File filesDir = getFilesDir();
-        File todoFile = new File(filesDir, "todo.txt");
-        try {
-            FileUtils.writeLines(todoFile, items);
-        }
-        catch (IOException e){
-            e.printStackTrace();
+        List<Item> DBitems = toDoDatabaseHelper.getAllItems();
+        items = new ArrayList<String>();
+        for (Item item : DBitems) {
+           items.add(item.text);
         }
     }
 
+
+    // Edit item results from EditItemActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // REQUEST_CODE is defined above
@@ -143,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
             itemsAdapter.remove(itemsAdapter.getItem(position).toString());
             itemsAdapter.insert(text, position);
-                    writeItems();
+                   // writeItems();
         }
     }
 

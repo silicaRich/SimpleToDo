@@ -75,11 +75,15 @@ public class ToDoDatabaseHelper extends SQLiteOpenHelper {
                 "(" +
                 KEY_USER_ID + " INTEGER PRIMARY KEY," +
                 KEY_USER_NAME + " TEXT)";// +
-              //  KEY_USER_COMPLETED_ITEMS + "(SELECT * FROM " + TABLE_ITEMS  +
-                //" WHERE " + KEY_ITEM_USER_ID_FK + " = "+  KEY_USER_ID + "))";
+        //  KEY_USER_COMPLETED_ITEMS + "(SELECT * FROM " + TABLE_ITEMS  +
+        //" WHERE " + KEY_ITEM_USER_ID_FK + " = "+  KEY_USER_ID + "))";
 
         db.execSQL(CREATE_ITEMS_TABLE);
         db.execSQL(CREATE_USERS_TABLE);
+
+        User admin = new User();
+        admin.userName = "Admin";
+        addOrUpdateUser(admin);
     }
 
     // Called when the database needs to be upgraded.
@@ -91,10 +95,10 @@ public class ToDoDatabaseHelper extends SQLiteOpenHelper {
             // Simplest implementation is to drop all old tables and recreate them
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_ITEMS);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
-            onCreate(db);   }
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
+            onCreate(db);
+        }
     }
-
-
 
 
     // Insert a item into the database
@@ -105,6 +109,7 @@ public class ToDoDatabaseHelper extends SQLiteOpenHelper {
         // It's a good idea to wrap our insert in a transaction. This helps with performance and ensures
         // consistency of the database.
         db.beginTransaction();
+
         try {
             // The user might already exist in the database (i.e. the same user created multiple ITEMS).
             long userId = addOrUpdateUser(item.user);
@@ -202,7 +207,7 @@ public class ToDoDatabaseHelper extends SQLiteOpenHelper {
                     newItem.text = cursor.getString(cursor.getColumnIndex(KEY_ITEM_TEXT));
                     newItem.user = newUser;
                     items.add(newItem);
-                } while(cursor.moveToNext());
+                } while (cursor.moveToNext());
             }
         } catch (Exception e) {
             Log.d(TAG, "Error while trying to get ITEMS from database");
@@ -223,9 +228,8 @@ public class ToDoDatabaseHelper extends SQLiteOpenHelper {
 
         // Updating profile picture url for user with that userName
         return db.update(TABLE_USERS, values, KEY_USER_NAME + " = ?",
-                new String[] { String.valueOf(user.userName) });
+                new String[]{String.valueOf(user.userName)});
     }
-
 
 
     // Delete all ITEMS and users in the database
@@ -240,6 +244,26 @@ public class ToDoDatabaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             Log.d(TAG, "Error while trying to delete all ITEMS and users");
         } finally {
+            db.endTransaction();
+        }
+    }
+
+
+    // Delete ITEM in the database
+    public void deleteItem(String itemText) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        if (itemText != null) {
+            try {
+                db.delete(TABLE_ITEMS, KEY_ITEM_TEXT + "=?", new String[]{itemText});
+                db.setTransactionSuccessful();
+            } catch (Exception e) {
+                Log.d(TAG, "Error while trying to delete ITEM");
+            } finally {
+                db.endTransaction();
+            }
+        } else {
+            Log.d(TAG, "Can't delete, item is undefined.");
             db.endTransaction();
         }
     }
