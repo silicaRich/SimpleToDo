@@ -2,8 +2,11 @@ package com.codepath.simpletodo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,17 +16,23 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.codepath.simpletodo.ToDoDatabaseHelper.*;
+import com.codepath.simpletodo.Item;
+import com.codepath.simpletodo.User;
+
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<String> items;
     ArrayAdapter<String> itemsAdapter;
     ListView lvItems;
     private final int REQUEST_CODE = 20;
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
         lvItems.setAdapter(itemsAdapter);
         setupListViewListener();
+
     }
 
     private void setupListViewListener(){
@@ -52,8 +62,9 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapter, View item, int pos, long id) {
                 // first parameter is the context, second is the class of the activity to launch
                 Intent i = new Intent(MainActivity.this, EditItemActivity.class);
+               // itemsAdapter.getItem(pos).toString();
                 // passing data to new activity
-                i.putExtra("text", item.toString());
+                i.putExtra("text", itemsAdapter.getItem(pos).toString());
                 i.putExtra("index", pos);
                 startActivityForResult(i, REQUEST_CODE);
             }
@@ -89,6 +100,26 @@ public class MainActivity extends AppCompatActivity {
         catch (IOException e){
             items = new ArrayList<String>();
         }
+
+
+        // Create sample data
+        User sampleUser = new User();
+        sampleUser.userName = "Steph";
+
+        Item sampleItem = new Item();
+        sampleItem.user = sampleUser;
+        sampleItem.text = "Won won!";
+
+
+        ToDoDatabaseHelper toDoDatabaseHelper = ToDoDatabaseHelper.getInstance(MainActivity.this);     // Add sample post to the database
+        toDoDatabaseHelper.addItem(sampleItem);
+
+        // Get all Items from database
+        List<Item> items = toDoDatabaseHelper.getAllItems();
+        for (Item item : items) {
+            Log.d(TAG, item.text);
+        }
+
     }
 
     private void writeItems(){

@@ -19,7 +19,7 @@
         jar="C:\Users\floko_000\AndroidStudioProjects\SimpleToDo\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
         jumboMode="true"
         revision="24.0.0"
-        sha1="44a3fdec4f927227911887d215d3bf7b12e7a086">
+        sha1="075b0c90585eee3c024fd2bf74f3276832852462">
         <dex dex="C:\Users\floko_000\AndroidStudioProjects\SimpleToDo\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_8e1c8ae2ae4ad16aabef9062b852cf4500b49e04\classes.dex" />
     </item>
     <item
@@ -47,7 +47,7 @@
         jar="C:\Users\floko_000\AndroidStudioProjects\SimpleToDo\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
         jumboMode="true"
         revision="24.0.0"
-        sha1="ff86d3971199f4c1ce152de8a34b0d9a27574144">
+        sha1="2e175553398c3d19f5d32667e2d63c80ca21fa47">
         <dex dex="C:\Users\floko_000\AndroidStudioProjects\SimpleToDo\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_967e780ce848e1644434c3bcfc0acd619bcbd7aa\classes.dex" />
     </item>
     <item
