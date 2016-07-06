@@ -116,15 +116,15 @@ public class MainActivity extends AppCompatActivity {
     // Edit item results from EditItemActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        ToDoDatabaseHelper toDoDatabaseHelper = ToDoDatabaseHelper.getInstance(MainActivity.this);
         // REQUEST_CODE is defined above
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
 
+            toDoDatabaseHelper.updateItem(data);
             String text = data.getExtras().getString("text");
             int position = data.getExtras().getInt("index");
-
             itemsAdapter.remove(itemsAdapter.getItem(position).toString());
             itemsAdapter.insert(text, position);
-                   // writeItems();
         }
     }
 

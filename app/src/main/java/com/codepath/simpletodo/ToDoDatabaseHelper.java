@@ -1,6 +1,7 @@
 package com.codepath.simpletodo;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -267,6 +268,32 @@ public class ToDoDatabaseHelper extends SQLiteOpenHelper {
             db.endTransaction();
         }
     }
+
+
+    // Update ITEM in the database
+    public void updateItem(Intent data) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        if (data != null) {
+            try {
+                String newText = data.getExtras().getString("text");
+                String oldText = data.getExtras().getString("oldText");
+                ContentValues newValues = new ContentValues();
+                newValues.put(KEY_ITEM_TEXT, newText);
+                String[] args = new String[]{oldText};
+                db.update(TABLE_ITEMS, newValues, KEY_ITEM_TEXT + "=?", args);
+                db.setTransactionSuccessful();
+            } catch (Exception e) {
+                Log.d(TAG, "Error while trying to update ITEM");
+            } finally {
+                db.endTransaction();
+            }
+        } else {
+            Log.d(TAG, "Can't update, item is undefined.");
+            db.endTransaction();
+        }
+    }
+
 }
 
 

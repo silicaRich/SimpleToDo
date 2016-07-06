@@ -14,9 +14,9 @@ public class EditItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_item);
 
 
-        String text = getIntent().getStringExtra("text");
+        String oldText = getIntent().getStringExtra("text");
         EditText editItem = (EditText) findViewById(R.id.itemBody);
-        editItem.setText(text);
+        editItem.setText(oldText);
         editItem.requestFocus();
 
 
@@ -25,6 +25,7 @@ public class EditItemActivity extends AppCompatActivity {
 
 
     public void onSubmit(View v) {
+        String oldText = getIntent().getStringExtra("text");
         EditText etItem = (EditText) findViewById(R.id.itemBody);
         int index = getIntent().getIntExtra("index", 0);
         // Prepare data intent
@@ -32,6 +33,7 @@ public class EditItemActivity extends AppCompatActivity {
         // Pass relevant data back as a result
         data.putExtra("text", etItem.getText().toString());
         data.putExtra("index", index);
+        data.putExtra("oldText", oldText);
         // Activity finished ok, return the data
         setResult(RESULT_OK, data); // set result code and bundle data for response
         finish(); // closes the activity, pass data to parent
