@@ -29,6 +29,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<String> items;
+
+
     ArrayAdapter<String> itemsAdapter;
     ListView lvItems;
     private final int REQUEST_CODE = 20;
@@ -42,6 +44,17 @@ public class MainActivity extends AppCompatActivity {
         readItems();
         itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
         lvItems.setAdapter(itemsAdapter);
+
+        // Construct the data source
+        ArrayList<Item> arrayOfTasks = new ArrayList<Item>();
+        // Create the adapter to convert the array to views
+        TasksAdapter adapter = new TasksAdapter(this, arrayOfTasks);
+
+        // Attach the adapter to a ListView
+        ListView listView = (ListView) findViewById(R.id.lvItems);
+        listView.setAdapter(adapter);
+
+
         setupListViewListener();
 
     }
