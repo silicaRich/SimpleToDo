@@ -28,10 +28,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    ArrayList<String> items;
+    //ArrayList<String> items;
 
-
-    ArrayAdapter<String> itemsAdapter;
+    ArrayList<Item> arrayOfTasks; // = new ArrayList<Item>();
+    User admin;
+    //  ArrayAdapter<String> itemsAdapter;
+  TasksAdapter tasksAdapter;
     ListView lvItems;
     private final int REQUEST_CODE = 20;
     private static final String TAG = "MainActivity";
@@ -39,20 +41,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        admin = new User();
+        admin.userName = "Admin";
+
+
+
+        arrayOfTasks = new ArrayList<Item>();
         setContentView(R.layout.activity_main);
         lvItems = (ListView)findViewById(R.id.lvItems);
+        //ListView lvItems = (ListView) findViewById(R.id.lvItems);
+        tasksAdapter = new TasksAdapter(this, arrayOfTasks);
         readItems();
-        itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
-        lvItems.setAdapter(itemsAdapter);
+        //itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        //lvItems.setAdapter(itemsAdapter);
 
         // Construct the data source
-        ArrayList<Item> arrayOfTasks = new ArrayList<Item>();
         // Create the adapter to convert the array to views
-        TasksAdapter adapter = new TasksAdapter(this, arrayOfTasks);
 
         // Attach the adapter to a ListView
-        ListView listView = (ListView) findViewById(R.id.lvItems);
-        listView.setAdapter(adapter);
+        lvItems.setAdapter(tasksAdapter);
 
 
         setupListViewListener();
@@ -65,11 +73,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapter, View item, int pos, long id){
                 ToDoDatabaseHelper toDoDatabaseHelper = ToDoDatabaseHelper.getInstance(MainActivity.this);
-                String itemText = itemsAdapter.getItem(pos).toString();
-                itemsAdapter.remove(itemText);
+                //String itemText = tasksAdapter.getItem(pos).toString();
+                Item itemText = tasksAdapter.getItem(pos);
+                tasksAdapter.remove(itemText);
                 toDoDatabaseHelper.deleteItem(itemText);
-                readItems();
-                itemsAdapter.notifyDataSetChanged();
+                //readItems();
+                tasksAdapter.notifyDataSetChanged();
                 return true;
             }
 
@@ -81,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(MainActivity.this, EditItemActivity.class);
                // itemsAdapter.getItem(pos).toString();
                 // passing data to new activity
-                i.putExtra("text", itemsAdapter.getItem(pos).toString());
+                i.putExtra("text", tasksAdapter.getItem(pos).text);
                 i.putExtra("index", pos);
                 startActivityForResult(i, REQUEST_CODE);
             }
@@ -103,11 +112,10 @@ public class MainActivity extends AppCompatActivity {
         ToDoDatabaseHelper toDoDatabaseHelper = ToDoDatabaseHelper.getInstance(MainActivity.this);
         EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
         String itemText = etNewItem.getText().toString();
-        itemsAdapter.add(itemText);
+        Item newItem = new Item();
+        newItem.text = itemText;
+        tasksAdapter.add(newItem);
         etNewItem.setText("");
-        Item newItem = new Item ();
-        User admin = new User();
-        admin.userName = "Admin";
         newItem.text = itemText;
         newItem.user = admin;
 
@@ -119,11 +127,12 @@ public class MainActivity extends AppCompatActivity {
         ToDoDatabaseHelper toDoDatabaseHelper = ToDoDatabaseHelper.getInstance(MainActivity.this);
         // Get all Items from database
         List<Item> DBitems = toDoDatabaseHelper.getAllItems();
-        items = new ArrayList<String>();
-        for (Item item : DBitems) {
-           items.add(item.text);
+ //       items = new ArrayList<String>();
+        for (Item task : DBitems) {
+            arrayOfTasks.add(task);
         }
     }
+
 
 
     // Edit item results from EditItemActivity
@@ -132,12 +141,17 @@ public class MainActivity extends AppCompatActivity {
         ToDoDatabaseHelper toDoDatabaseHelper = ToDoDatabaseHelper.getInstance(MainActivity.this);
         // REQUEST_CODE is defined above
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-
+            Item oldItem = (Item)data.getExtras().get("item");
             toDoDatabaseHelper.updateItem(data);
-            String text = data.getExtras().getString("text");
             int position = data.getExtras().getInt("index");
-            itemsAdapter.remove(itemsAdapter.getItem(position).toString());
-            itemsAdapter.insert(text, position);
+            Item task = new Item ();
+            task.text = data.getExtras().getString("text");
+            task.user = admin;
+
+        //    Item editedItem = data.getExtras().get("editedItem");
+            //tasksAdapter.remove(tasksAdapter.getItem(position).toString());
+            tasksAdapter.remove(tasksAdapter.getItem(position));
+            tasksAdapter.insert(task, position);
         }
     }
 

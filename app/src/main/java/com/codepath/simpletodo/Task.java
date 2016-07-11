@@ -6,4 +6,9 @@ package com.codepath.simpletodo;
 public class Task {
     public User user;
     public String text;
+
+    public Task(){
+        this.user = user;
+        this.text = text;
+    }
 }

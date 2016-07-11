@@ -18,9 +18,6 @@ public class EditItemActivity extends AppCompatActivity {
         EditText editItem = (EditText) findViewById(R.id.itemBody);
         editItem.setText(oldText);
         editItem.requestFocus();
-
-
-
     }
 
 
@@ -34,6 +31,7 @@ public class EditItemActivity extends AppCompatActivity {
         data.putExtra("text", etItem.getText().toString());
         data.putExtra("index", index);
         data.putExtra("oldText", oldText);
+        //data.putExtra("editedItem", oldText);
         // Activity finished ok, return the data
         setResult(RESULT_OK, data); // set result code and bundle data for response
         finish(); // closes the activity, pass data to parent

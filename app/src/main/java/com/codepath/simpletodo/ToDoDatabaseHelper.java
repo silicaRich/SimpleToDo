@@ -251,12 +251,12 @@ public class ToDoDatabaseHelper extends SQLiteOpenHelper {
 
 
     // Delete ITEM in the database
-    public void deleteItem(String itemText) {
+    public void deleteItem(Item itemText) {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
         if (itemText != null) {
             try {
-                db.delete(TABLE_ITEMS, KEY_ITEM_TEXT + "=?", new String[]{itemText});
+                db.delete(TABLE_ITEMS, KEY_ITEM_TEXT + "=?", new String[]{itemText.text});
                 db.setTransactionSuccessful();
             } catch (Exception e) {
                 Log.d(TAG, "Error while trying to delete ITEM");
