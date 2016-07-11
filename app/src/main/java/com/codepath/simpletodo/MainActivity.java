@@ -1,29 +1,17 @@
 package com.codepath.simpletodo;
 
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.codepath.simpletodo.ToDoDatabaseHelper.*;
-import com.codepath.simpletodo.Item;
-import com.codepath.simpletodo.User;
-
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,13 +60,25 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onItemLongClick(AdapterView<?> adapter, View item, int pos, long id){
-                ToDoDatabaseHelper toDoDatabaseHelper = ToDoDatabaseHelper.getInstance(MainActivity.this);
-                //String itemText = tasksAdapter.getItem(pos).toString();
-                Item itemText = tasksAdapter.getItem(pos);
-                tasksAdapter.remove(itemText);
-                toDoDatabaseHelper.deleteItem(itemText);
-                //readItems();
-                tasksAdapter.notifyDataSetChanged();
+                final int position = pos;
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Confirmation")
+                        .setMessage("Do you really want to delete this item?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                ToDoDatabaseHelper toDoDatabaseHelper = ToDoDatabaseHelper.getInstance(MainActivity.this);
+                                //String itemText = tasksAdapter.getItem(pos).toString();
+                                Item itemText = tasksAdapter.getItem(position);
+                                tasksAdapter.remove(itemText);
+                                toDoDatabaseHelper.deleteItem(itemText);
+                                //readItems();
+                                tasksAdapter.notifyDataSetChanged();
+                            //    Toast.makeText(MainActivity.this, "Yaay", Toast.LENGTH_SHORT).show();
+                            }})
+                        .setNegativeButton(android.R.string.no, null).show();
+
                 return true;
             }
 
